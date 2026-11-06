@@ -93,7 +93,9 @@ pensati per ricompensarti più a lungo guardi:
 - La scena è volutamente **ferma** — nessun movimento continuo. La pianta si
   piega solo quando la annaffi, e l'interfaccia si ricalcola da sola così il
   compagno entra sempre bene tra il contatore dei litri e i comandi su qualsiasi
-  schermo, con il giardino piantato sull'erba ai lati del vaso.
+  schermo, con il giardino piantato sull'erba ai lati del vaso. La pagina è un
+  palcoscenico a schermo intero: niente scrollbar, niente rimbalzi, e a zoom
+  elevato il compagno si rimpicciolisce per restare sempre visibile.
 - Tutto vive solo nel `localStorage` del dispositivo.
 - Testo ad alto contrasto sopra la scena animata.
 

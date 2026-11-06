@@ -1,6 +1,6 @@
 /* Little Garden — offline service worker.
    Caches the app shell so the garden opens even without a connection. */
-const CACHE = 'little-garden-v9';
+const CACHE = 'little-garden-v10';
 const ASSETS = [
   './',
   './index.html',

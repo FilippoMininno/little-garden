@@ -65,12 +65,15 @@
 html, body {
   margin: 0;
   padding: 0;
+  width: 100%;
   height: 100%;
-  overflow-x: hidden;
+  overflow: hidden;            /* never show a scrollbar */
   overscroll-behavior: none;
 }
 
 body {
+  position: fixed;             /* stop mobile page scroll / rubber-banding */
+  inset: 0;
   font-family: var(--font);
   color: var(--ink);
   background: #cfeaf0;
@@ -86,7 +89,9 @@ button, input { font-family: inherit; }
 /* The whole experience is one fixed viewport; the garden is a stage. */
 .app {
   position: fixed;
-  inset: 0;
+  top: 0; left: 0; right: 0;
+  height: 100vh;
+  height: 100dvh;              /* dynamic viewport: stable with mobile toolbars */
   overflow: hidden;
   display: flex;
   flex-direction: column;

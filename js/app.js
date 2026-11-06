@@ -698,6 +698,7 @@
       const tagH = d.companionTag ? d.companionTag.offsetHeight : 0;
       const overlap = potH * 0.10;
       const available = controlsRect.top - meterRect.bottom;
+      root.setProperty('--companion-scale', '1');
       let plantH = Util.clamp(available - potH - tagH + overlap - 14, 72, 340);
       root.setProperty('--controls-h', Math.round(controlsRect.height) + 'px');
       root.setProperty('--companion-bottom', Math.round(vh - controlsRect.top + 8) + 'px');
@@ -711,6 +712,12 @@
         if (plantH < 56) break;
         root.setProperty('--plant-wrap-h', Math.round(plantH) + 'px');
       }
+
+      // on very short screens (e.g. zoomed in) shrink the whole companion too,
+      // so it can never be pushed off the top and disappear
+      const naturalH = plantH + potH - overlap + tagH;
+      const fitScale = naturalH > 0 ? Math.min(1, (available - 4) / naturalH) : 1;
+      root.setProperty('--companion-scale', Math.max(0.4, fitScale).toFixed(3));
 
       // place the meadow either side of the pot's real width, on the grass
       const potRect = d.pot.getBoundingClientRect();

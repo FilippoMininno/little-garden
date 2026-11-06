@@ -178,6 +178,9 @@ body.is-night .greeting { text-shadow: 0 2px 12px rgba(0, 0, 0, 0.5); }
   transition: background 0.4s ease;
   max-width: 90vw;
   text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .last-drink.thirsty { background: rgba(210, 120, 60, 0.42); }
 
@@ -545,3 +548,17 @@ input[type="range"]::-moz-range-thumb {
   transition: transform 0.15s ease;
 }
 .welcome-btn:active { transform: scale(0.96); }
+
+/* --------------------------- very small screens (high zoom) --------------------------- */
+@media (max-width: 320px) {
+  .last-drink { font-size: 0.66rem; padding: 5px 10px; }
+  .meter { padding: 7px 11px; gap: 8px; }
+  .meter-value { font-size: 1rem; }
+  .meter-sub { font-size: 0.66rem; }
+  .drink-btn { padding: 10px 12px; gap: 7px; }
+  .drink-glass svg { width: 36px; height: 46px; }
+  .drink-label strong { font-size: 0.82rem; white-space: nowrap; }
+  .drink-label small { font-size: 0.64rem; }
+  .ctrl-btn { width: 46px; height: 46px; }
+  .toast { font-size: 0.8rem; padding: 10px 13px; }
+}
