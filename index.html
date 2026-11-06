@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="description" content="Un giardino compagno per tracciare l'acqua, pensato per chi affronta la chemioterapia." />
+<meta name="theme-color" id="themeColor" content="#9bd3e8" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="default" />
+<meta name="apple-mobile-web-app-title" content="Piccolo Giardino" />
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml" />
+<link rel="apple-touch-icon" href="icons/icon.svg" />
+<!-- The manifest is attached at runtime only on http(s): browsers block it on file:// -->
+<link rel="stylesheet" href="css/base.css" />
+<link rel="stylesheet" href="css/scene.css" />
+<link rel="stylesheet" href="css/plant.css" />
+<link rel="stylesheet" href="css/garden.css" />
+<link rel="stylesheet" href="css/ui.css" />
+<title>Piccolo Giardino — un compagno d'acqua</title>
+</head>
+<body>
+<div id="app" class="app">
+
+  <!-- ============================= SCENE ============================= -->
+  <div class="scene" id="scene" aria-hidden="true">
+
+    <!-- sky layers -->
+    <div class="sky">
+      <div class="sky-layer sky-day"></div>
+      <div class="sky-layer sky-dusk"></div>
+      <div class="sky-layer sky-night">
+        <div class="stars" id="stars"></div>
+        <div class="aurora" id="aurora"></div>
+        <div class="moon" id="moon">
+          <div class="moon-craters"></div>
+        </div>
+        <div class="shooting" id="shooting"></div>
+      </div>
+      <div class="sun" id="sun">
+        <div class="sun-core"></div>
+        <div class="sun-halo"></div>
+      </div>
+      <div class="clouds" id="clouds"></div>
+      <div class="atmo" id="atmo"></div>
+    </div>
+
+    <!-- distant hills -->
+    <div class="hills">
+      <svg viewBox="0 0 1440 420" preserveAspectRatio="none">
+        <defs>
+          <linearGradient id="hillBack" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0"/>
+            <stop offset="1"/>
+          </linearGradient>
+          <linearGradient id="hillMid" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0"/>
+            <stop offset="1"/>
+          </linearGradient>
+          <linearGradient id="hillFront" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0"/>
+            <stop offset="1"/>
+          </linearGradient>
+        </defs>
+        <path d="M0 210 C 170 120 330 70 520 120 C 700 168 820 60 1000 95 C 1170 128 1290 70 1440 120 L1440 420 L0 420 Z" fill="url(#hillBack)" opacity="0.8"/>
+        <path d="M0 285 C 200 205 380 150 560 200 C 740 250 900 135 1080 172 C 1240 205 1350 160 1440 188 L1440 420 L0 420 Z" fill="url(#hillMid)" opacity="0.92"/>
+        <path d="M0 320 C 220 255 400 205 580 240 C 780 278 920 190 1100 224 C 1260 252 1360 218 1440 232 L1440 420 L0 420 Z" fill="url(#hillFront)"/>
+      </svg>
+    </div>
+
+    <!-- the thriving garden grows in the background -->
+    <div class="garden" id="garden"></div>
+
+    <!-- foreground ground / soil -->
+    <div class="ground" id="ground">
+      <div class="ground-grass"></div>
+      <div class="ground-soil"></div>
+    </div>
+
+    <!-- living things -->
+    <div class="fireflies" id="fireflies"></div>
+    <div class="pollen" id="pollen"></div>
+    <div class="insects" id="insects"></div>
+
+    <!-- the daily companion -->
+    <div class="companion" id="companion">
+      <div class="speech" id="speech" role="status" aria-live="polite"></div>
+
+      <div class="plant-wrap">
+        <svg id="mainPlant" class="main-plant" viewBox="0 0 220 300" preserveAspectRatio="xMidYMax meet"></svg>
+      </div>
+
+      <div class="pot-wrap">
+        <div class="pot-shadow"></div>
+        <svg id="pot" class="pot" viewBox="0 0 200 168" preserveAspectRatio="xMidYMax meet">
+          <defs>
+            <linearGradient id="potBody" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#f2b78c"/>
+              <stop offset="0.35" stop-color="#dd8a55"/>
+              <stop offset="0.72" stop-color="#bd6d3d"/>
+              <stop offset="1" stop-color="#8f4d2a"/>
+            </linearGradient>
+            <linearGradient id="potRim" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#ffd3ac"/>
+              <stop offset="0.5" stop-color="#e79c66"/>
+              <stop offset="1" stop-color="#ad6236"/>
+            </linearGradient>
+            <radialGradient id="soil" cx="0.5" cy="0.28" r="0.82">
+              <stop offset="0" stop-color="#7c5637"/>
+              <stop offset="1" stop-color="#33200f"/>
+            </radialGradient>
+            <radialGradient id="irisGrad" cx="0.4" cy="0.34" r="0.85">
+              <stop offset="0" stop-color="#7a5540"/>
+              <stop offset="0.6" stop-color="#4a3226"/>
+              <stop offset="1" stop-color="#241610"/>
+            </radialGradient>
+            <linearGradient id="saucerGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#dd8f5a"/>
+              <stop offset="1" stop-color="#84502e"/>
+            </linearGradient>
+          </defs>
+
+          <!-- saucer -->
+          <ellipse cx="100" cy="151" rx="80" ry="13" fill="url(#saucerGrad)"/>
+          <ellipse cx="100" cy="148" rx="70" ry="8" fill="#e79b60" opacity="0.5"/>
+
+          <!-- body -->
+          <path class="pot-body" d="M32 44 L168 44 L150 132 Q148 144 136 144 L64 144 Q52 144 50 132 Z" fill="url(#potBody)"/>
+          <path d="M44 54 L60 54 L52 136 Q50 140 47 137 Z" fill="#ffffff" opacity="0.17"/>
+          <path d="M150 58 L160 58 L150 132 Q149 136 147 133 Z" fill="#3a1f12" opacity="0.13"/>
+          <!-- decorative carved band -->
+          <path d="M37 68 Q100 60 163 68 L160 79 Q100 71 40 79 Z" fill="#ffffff" opacity="0.12"/>
+          <g fill="#7a3f22" opacity="0.28">
+            <circle cx="70" cy="73" r="2"/><circle cx="88" cy="71" r="2"/>
+            <circle cx="106" cy="71" r="2"/><circle cx="124" cy="72" r="2"/>
+          </g>
+
+          <!-- soil -->
+          <ellipse cx="100" cy="44" rx="72" ry="14" fill="url(#soil)"/>
+          <ellipse cx="100" cy="42" rx="64" ry="10" fill="#6f4b31"/>
+          <g class="soil-detail">
+            <ellipse cx="82" cy="42" rx="4" ry="1.6" fill="#3f2a1c" opacity="0.6"/>
+            <ellipse cx="112" cy="45" rx="5" ry="1.9" fill="#3f2a1c" opacity="0.5"/>
+            <ellipse cx="100" cy="39" rx="3" ry="1.2" fill="#3f2a1c" opacity="0.5"/>
+            <circle cx="70" cy="46" r="2.4" fill="#8a6a4a"/>
+            <circle cx="128" cy="44" r="2" fill="#7a5a3d"/>
+            <path d="M100 40 q -3 -6 -9 -7 q 4 5 9 7 Z" fill="#6fce87"/>
+            <path d="M100 40 q 3 -6 9 -7 q -4 5 -9 7 Z" fill="#5cbb75"/>
+            <path d="M100 40 L100 30" stroke="#4fae5e" stroke-width="1.4" stroke-linecap="round"/>
+          </g>
+
+          <!-- rim -->
+          <rect x="20" y="24" width="160" height="26" rx="13" fill="url(#potRim)"/>
+          <rect x="26" y="28" width="148" height="7" rx="3.5" fill="#ffe6cf" opacity="0.5"/>
+          <rect x="26" y="44" width="148" height="4" rx="2" fill="#8f4f2c" opacity="0.22"/>
+
+          <!-- face -->
+          <g class="face" id="potFace">
+            <g class="blush">
+              <ellipse cx="52" cy="106" rx="12" ry="7.5" fill="#ff9aa2" opacity="0.5"/>
+              <ellipse cx="148" cy="106" rx="12" ry="7.5" fill="#ff9aa2" opacity="0.5"/>
+            </g>
+            <g class="eyes">
+              <g class="eye eye-left">
+                <ellipse class="eye-white" cx="74" cy="92" rx="12.6" ry="12.6" fill="#fffaf4"/>
+                <ellipse class="pupil" cx="75" cy="93" rx="6.5" ry="6.5" fill="url(#irisGrad)"/>
+                <circle class="sparkle" cx="71.4" cy="89.4" r="2.6" fill="#fff"/>
+                <circle class="sparkle2" cx="78" cy="96.5" r="1.3" fill="#fff" opacity="0.85"/>
+                <path class="lid" d="M62 88 Q74 82 86 88" fill="none" stroke="#a05a30" stroke-width="1.6" opacity="0.3"/>
+                <path class="eye-arc" d="M61 95 Q74 82 87 95" fill="none" stroke="#3a2a22" stroke-width="3.2" stroke-linecap="round" opacity="0"/>
+              </g>
+              <g class="eye eye-right">
+                <ellipse class="eye-white" cx="126" cy="92" rx="12.6" ry="12.6" fill="#fffaf4"/>
+                <ellipse class="pupil" cx="125" cy="93" rx="6.5" ry="6.5" fill="url(#irisGrad)"/>
+                <circle class="sparkle" cx="122.4" cy="89.4" r="2.6" fill="#fff"/>
+                <circle class="sparkle2" cx="129" cy="96.5" r="1.3" fill="#fff" opacity="0.85"/>
+                <path class="lid" d="M114 88 Q126 82 138 88" fill="none" stroke="#a05a30" stroke-width="1.6" opacity="0.3"/>
+                <path class="eye-arc" d="M113 95 Q126 82 139 95" fill="none" stroke="#3a2a22" stroke-width="3.2" stroke-linecap="round" opacity="0"/>
+              </g>
+            </g>
+            <path class="brow brow-left" d="M60 74 Q74 67 88 74" fill="none" stroke="#8a4a26" stroke-width="3" stroke-linecap="round" opacity="0"/>
+            <path class="brow brow-right" d="M112 74 Q126 67 140 74" fill="none" stroke="#8a4a26" stroke-width="3" stroke-linecap="round" opacity="0"/>
+            <path class="mouth" id="potMouth" d="M86 112 Q100 120 114 112" fill="none" stroke="#5a3420" stroke-width="3.4" stroke-linecap="round"/>
+            <path class="sweat" id="potSweat" d="M154 66 C154 72 160 74 160 79 C160 83 157 85 154 85 C151 85 148 83 148 79 C148 74 154 72 154 66 Z" fill="#8fd3f4" opacity="0"/>
+          </g>
+        </svg>
+      </div>
+
+      <!-- little plant badge for today's companion -->
+      <div class="companion-tag" id="companionTag"></div>
+    </div>
+
+    <!-- particles / effects layer -->
+    <div class="fx" id="fx"></div>
+    <div class="pouring" id="pouring"></div>
+    <div class="grain" aria-hidden="true"></div>
+  </div>
+
+  <!-- ============================= HUD ============================= -->
+  <header class="hud" id="hud">
+    <div class="hud-left">
+      <div class="greeting" id="greeting">Buongiorno</div>
+      <div class="dateline" id="dateline">—</div>
+    </div>
+    <div class="hud-right">
+      <div class="garden-count" id="gardenCount" title="Amici fioriti nel tuo giardino">
+        <span class="gc-icon">🌷</span><span id="gardenCountNum">0</span>
+      </div>
+      <button class="icon-btn" id="settingsBtn" aria-label="Impostazioni">
+        <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+          <path fill="currentColor" d="M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8Zm9.4 4a7.4 7.4 0 0 0-.1-1.2l2-1.6-2-3.4-2.4 1a7.5 7.5 0 0 0-2-1.2L14.5 2h-4l-.4 2.6a7.5 7.5 0 0 0-2 1.2l-2.4-1-2 3.4 2 1.6a7.4 7.4 0 0 0 0 2.4l-2 1.6 2 3.4 2.4-1c.6.5 1.3.9 2 1.2l.4 2.6h4l.4-2.6c.7-.3 1.4-.7 2-1.2l2.4 1 2-3.4-2-1.6c.1-.4.1-.8.1-1.2Z"/>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- hydration meter -->
+  <div class="meter" id="meter" role="group" aria-label="Progresso di idratazione">
+    <div class="meter-glass">
+      <div class="meter-fill" id="meterFill"></div>
+      <div class="meter-shine"></div>
+    </div>
+    <div class="meter-body">
+      <div class="meter-top">
+        <span class="meter-value" id="meterValue">0,00</span>
+        <span class="meter-goal" id="meterGoal">/ 2,00 L</span>
+      </div>
+      <div class="meter-bar"><div class="meter-bar-fill" id="meterBarFill"></div></div>
+      <div class="meter-sub" id="meterSub">Iniziamo con un sorso</div>
+    </div>
+  </div>
+
+  <!-- ============================= CONTROLS ============================= -->
+  <footer class="controls" id="controls">
+    <div class="last-drink" id="lastDrink">Il tuo piccolo amico aspetta un sorso</div>
+    <div class="control-row">
+      <button class="ctrl-btn undo" id="undoBtn" aria-label="Annulla l'ultimo bicchiere" disabled>
+        <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true">
+          <path fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" d="M9 14 4 9l5-5"/><path fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" d="M4 9h10a6 6 0 0 1 0 12h-3"/>
+        </svg>
+      </button>
+
+      <button class="drink-btn" id="drinkBtn" aria-label="Ho bevuto un bicchiere d'acqua">
+        <span class="drink-ripple" id="drinkRipple"></span>
+        <span class="drink-glass" aria-hidden="true">
+          <svg viewBox="0 0 48 60" width="48" height="60">
+            <defs>
+              <linearGradient id="glassWater" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#a9e4ff"/>
+                <stop offset="1" stop-color="#3aa6dd"/>
+              </linearGradient>
+            </defs>
+            <path d="M11 6 H37 L33 54 Q32.5 57 29 57 H19 Q15.5 57 15 54 Z" fill="#ffffff" opacity="0.22"/>
+            <path class="glass-water" d="M13 30 H35 L32.6 53 Q32.2 55 28.6 55 H19.4 Q15.8 55 15.4 53 Z" fill="url(#glassWater)"/>
+            <path d="M11 6 H37 L33 54 Q32.5 57 29 57 H19 Q15.5 57 15 54 Z" fill="none" stroke="#ffffff" stroke-width="2.4" opacity="0.85"/>
+            <path d="M14 12 H34" stroke="#ffffff" stroke-width="2" opacity="0.6" stroke-linecap="round"/>
+          </svg>
+        </span>
+        <span class="drink-label">
+          <strong>Ho bevuto un bicchiere</strong>
+          <small id="drinkMl">+250 ml</small>
+        </span>
+      </button>
+
+      <button class="ctrl-btn stats" id="statsBtn" aria-label="Come sta andando oggi">
+        <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true">
+          <path fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>
+        </svg>
+      </button>
+    </div>
+  </footer>
+
+  <!-- ============================= OVERLAYS ============================= -->
+  <div class="toast-stack" id="toastStack" aria-live="polite"></div>
+  <div class="bloom-banner" id="bloomBanner" role="status" aria-live="polite"></div>
+
+  <!-- Stats sheet -->
+  <div class="sheet" id="statsSheet" hidden>
+    <div class="sheet-backdrop" data-close="statsSheet"></div>
+    <div class="sheet-panel" role="dialog" aria-modal="true" aria-labelledby="statsTitle">
+      <div class="sheet-handle"></div>
+      <h2 id="statsTitle">I piccoli progressi di oggi</h2>
+      <div class="stat-grid">
+        <div class="stat"><div class="stat-num" id="statGlasses">0</div><div class="stat-lbl">bicchieri</div></div>
+        <div class="stat"><div class="stat-num" id="statGoal">8</div><div class="stat-lbl">obiettivo bicchieri</div></div>
+        <div class="stat"><div class="stat-num" id="statStreak">0</div><div class="stat-lbl">giorni di fila</div></div>
+        <div class="stat"><div class="stat-num" id="statBlooms">0</div><div class="stat-lbl">fioriture</div></div>
+      </div>
+      <div class="sheet-tip" id="statTip"></div>
+      <button class="sheet-close" data-close="statsSheet">Chiudi</button>
+    </div>
+  </div>
+
+  <!-- Settings sheet -->
+  <div class="sheet" id="settingsSheet" hidden>
+    <div class="sheet-backdrop" data-close="settingsSheet"></div>
+    <div class="sheet-panel" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+      <div class="sheet-handle"></div>
+      <h2 id="settingsTitle">Impostazioni</h2>
+
+      <label class="field">
+        <span class="field-label">Obiettivo giornaliero</span>
+        <span class="field-value"><b id="goalOut">2,0</b> L</span>
+        <input type="range" id="goalRange" min="0.5" max="4" step="0.1" value="2" />
+        <span class="field-hint">Raggiungerlo fa fiorire il tuo compagno.</span>
+      </label>
+
+      <label class="field">
+        <span class="field-label">Dimensione del bicchiere</span>
+        <span class="field-value"><b id="glassOut">250</b> ml</span>
+        <input type="range" id="glassRange" min="100" max="500" step="25" value="250" />
+        <span class="field-hint">Quanto bevi di solito in un bicchiere.</span>
+      </label>
+
+      <label class="field">
+        <span class="field-label">Promemoria gentile</span>
+        <span class="field-value">ogni <b id="remindOut">45</b> min</span>
+        <input type="range" id="remindRange" min="15" max="120" step="5" value="45" />
+        <span class="field-hint">Un promemoria quando è passato un po' di tempo.</span>
+      </label>
+
+      <div class="field toggle-field">
+        <div>
+          <span class="field-label">Notifiche</span>
+          <span class="field-hint">Lascia che il tuo compagno ti chiami.</span>
+        </div>
+        <button class="toggle" id="notifyToggle" role="switch" aria-checked="false"><span class="knob"></span></button>
+      </div>
+
+      <div class="field toggle-field">
+        <div>
+          <span class="field-label">Suoni delicati</span>
+          <span class="field-hint">Rintocchi morbidi quando bevi e fiorisci.</span>
+        </div>
+        <button class="toggle" id="soundToggle" role="switch" aria-checked="false"><span class="knob"></span></button>
+      </div>
+
+      <button class="danger-btn" id="resetBtn">Inizia un giardino nuovo</button>
+      <p class="fineprint">Il tuo giardino vive solo su questo dispositivo. Nulla viene mai inviato da nessuna parte.</p>
+      <button class="sheet-close" data-close="settingsSheet">Fatto</button>
+    </div>
+  </div>
+
+  <!-- Welcome / onboarding -->
+  <div class="welcome" id="welcome" hidden>
+    <div class="welcome-card" role="dialog" aria-modal="true" aria-labelledby="welcomeTitle">
+      <div class="welcome-art" id="welcomeArt"></div>
+      <h1 id="welcomeTitle">Un piccolo giardino,<br/>un sorso alla volta</h1>
+      <p class="welcome-text" id="welcomeText">
+        Certe giornate bere acqua sembra il compito più difficile. Non sarai da solo.
+        Ogni bicchiere che bevi annaffia un piccolo compagno — insieme farete crescere un giardino che fiorisce, giorno dopo giorno.
+      </p>
+      <div class="welcome-goal">
+        <span>Il mio obiettivo giornaliero</span>
+        <div class="welcome-goal-row">
+          <input type="range" id="welcomeGoal" min="0.5" max="4" step="0.1" value="2" />
+          <b id="welcomeGoalOut">2,0 L</b>
+        </div>
+      </div>
+      <button class="welcome-btn" id="welcomeStart">Pianta il mio primo seme</button>
+      <p class="fineprint">Fatto con cura. Tutto resta privato sul tuo dispositivo.</p>
+    </div>
+  </div>
+
+  <div class="celebrate" id="celebrate" aria-hidden="true"></div>
+</div>
+
+<script src="js/util.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/audio.js"></script>
+<script src="js/sky.js"></script>
+<script src="js/plant.js"></script>
+<script src="js/garden.js"></script>
+<script src="js/effects.js"></script>
+<script src="js/notify.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+{
+  "name": "Piccolo Giardino — un compagno d'acqua",
+  "short_name": "Piccolo Giardino",
+  "description": "Un giardino compagno per tracciare l'acqua, pensato per chi affronta la chemioterapia.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#dff1f7",
+  "theme_color": "#9bd3e8",
+  "icons": [
+    { "src": "icons/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}

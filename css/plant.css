@@ -1,0 +1,285 @@
+/* ============================================================
+   Little Garden — plant.css
+   The daily companion: plant SVG, drooping leaves, blooms,
+   the pot with a face, speech bubbles and the watering moment
+   ============================================================ */
+
+.companion {
+  position: absolute;
+  left: 50%;
+  bottom: var(--companion-bottom, calc(18vh + var(--safe-bottom)));
+  transform: translateX(-50%) scale(var(--companion-scale, 1));
+  transform-origin: 50% 100%;
+  width: min(88vw, 52vh, 430px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 20;
+  transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.plant-wrap {
+  width: 100%;
+  height: var(--plant-wrap-h, min(39vh, 300px));
+  position: relative;
+  z-index: 1;
+}
+.main-plant {
+  width: 100%;
+  height: 100%;
+  display: block;
+  overflow: visible;
+}
+
+.pot-wrap {
+  position: relative;
+  width: 64%;
+  margin-top: -7%;
+  z-index: 2;
+}
+.pot { width: 100%; height: auto; display: block; filter: drop-shadow(0 14px 18px rgba(40, 25, 15, 0.28)); }
+.pot-shadow {
+  position: absolute;
+  left: 8%; right: 8%;
+  bottom: -6%;
+  height: 14%;
+  background: radial-gradient(ellipse at center, rgba(30, 20, 10, 0.35), transparent 70%);
+  filter: blur(3px);
+  z-index: -1;
+}
+
+/* pot face */
+.face { transform-origin: 100px 100px; }
+.eye { transform-box: fill-box; transform-origin: center; transition: transform 0.25s ease; }
+.pupil { transition: transform 0.3s ease; }
+.eyes { transform-box: fill-box; transform-origin: center; }
+.eyes.closed .eye { transform: scaleY(0.08); }
+.eye-arc { opacity: 0; transition: opacity 0.2s ease; }
+.eyes.happy .eye-white,
+.eyes.happy .pupil,
+.eyes.happy .sparkle,
+.eyes.happy .sparkle2,
+.eyes.happy .lid,
+.eyes.joy .eye-white,
+.eyes.joy .pupil,
+.eyes.joy .sparkle,
+.eyes.joy .sparkle2,
+.eyes.joy .lid { opacity: 0; }
+.eyes.happy .eye-arc { opacity: 1; transform: scaleY(0.7); transform-box: fill-box; transform-origin: center; }
+.eyes.joy .eye-arc { opacity: 1; }
+.eyes.look-left .pupil { transform: translateX(-2.6px); }
+.eyes.look-right .pupil { transform: translateX(2.6px); }
+.eyes.look-up .pupil { transform: translateY(-2.2px); }
+.brow { transition: opacity 0.4s ease, d 0.4s ease; }
+.mouth { transition: d 0.28s ease, stroke 0.5s ease; }
+.blush { transform-box: fill-box; transform-origin: center; }
+.blush.pulse { animation: blushPulse 1s ease; }
+@keyframes blushPulse {
+  0%, 100% { transform: scale(1); opacity: 0.5; }
+  40%      { transform: scale(1.25); opacity: 0.85; }
+}
+.sweat { transition: opacity 0.6s ease; animation: sweatDrop 2.6s ease-in-out infinite; }
+
+/* the pot itself reacts — a happy squash, or a shy wiggle */
+.pot { transform-box: fill-box; transform-origin: 50% 100%; }
+.pot.bounce { animation: potBounce 0.85s cubic-bezier(0.34, 1.56, 0.64, 1); }
+@keyframes potBounce {
+  0%   { transform: translateY(0) scale(1, 1); }
+  22%  { transform: translateY(-4px) scale(0.94, 1.08); }
+  46%  { transform: translateY(2px) scale(1.07, 0.93); }
+  70%  { transform: translateY(-1px) scale(0.98, 1.02); }
+  100% { transform: translateY(0) scale(1, 1); }
+}
+.pot.wiggle { animation: potWiggle 0.7s ease; }
+@keyframes potWiggle {
+  0%, 100% { transform: rotate(0deg); }
+  20%      { transform: rotate(-3.5deg); }
+  50%      { transform: rotate(3deg); }
+  80%      { transform: rotate(-1.5deg); }
+}
+.pot.shake { animation: potShake 0.5s ease; }
+@keyframes potShake {
+  0%, 100% { transform: translateX(0); }
+  25%      { transform: translateX(-2.5px); }
+  75%      { transform: translateX(2.5px); }
+}
+@keyframes sweatDrop {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(4px); }
+}
+
+/* soft glow when the companion is content & flourishing */
+.companion.blooming .pot { filter: drop-shadow(0 14px 18px rgba(40, 25, 15, 0.28)) drop-shadow(0 0 26px rgba(255, 190, 220, 0.6)); }
+.companion.sparkle .plant-wrap { animation: plantPulse 1s ease; }
+@keyframes plantPulse {
+  0%   { transform: scale(1); }
+  35%  { transform: scale(1.05); }
+  70%  { transform: scale(0.985); }
+  100% { transform: scale(1); }
+}
+
+/* --------------------------- speech bubble --------------------------- */
+.speech {
+  position: absolute;
+  bottom: 30%;
+  left: 50%;
+  transform: translate(-50%, 8px) scale(0.85);
+  transform-origin: 50% 100%;
+  max-width: 82%;
+  padding: 10px 16px;
+  background: var(--panel-strong);
+  border: 1.5px solid var(--panel-border);
+  border-radius: 18px 18px 18px 6px;
+  box-shadow: var(--shadow-soft);
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--ink);
+  text-align: center;
+  line-height: 1.3;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  z-index: 6;
+}
+.speech.show { opacity: 1; transform: translate(-50%, 0) scale(1); }
+.speech::after {
+  content: "";
+  position: absolute;
+  bottom: -9px;
+  left: 26px;
+  width: 16px; height: 16px;
+  background: var(--panel-strong);
+  border-right: 1.5px solid var(--panel-border);
+  border-bottom: 1.5px solid var(--panel-border);
+  transform: rotate(45deg);
+  border-radius: 0 0 4px 0;
+}
+
+/* companion tag under the pot */
+.companion-tag {
+  margin-top: 10px;
+  padding: 5px 14px;
+  border-radius: 999px;
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  box-shadow: var(--shadow-soft);
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  color: var(--ink-soft);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  white-space: nowrap;
+}
+
+/* --------------------------- plant parts --------------------------- */
+/* The plant is animated each frame in JS, so no CSS transforms here —
+   only colour transitions for the slow wilting changes. */
+.stem { stroke-linejoin: round; }
+.stem-highlight { pointer-events: none; }
+.leaf { transform-box: fill-box; }
+.leaf-shape { transition: fill 1.4s ease; }
+.leaf-veins { transition: stroke 1.4s ease; }
+.dew { filter: drop-shadow(0 1px 1px rgba(20, 60, 90, 0.35)); }
+
+.bud-shape { transition: fill 1.4s ease; }
+.petals { transform-box: fill-box; transform-origin: center; }
+.petal { transform-box: fill-box; transform-origin: center bottom; }
+.flower-glow { pointer-events: none; }
+.side-flower { transform-box: fill-box; }
+
+/* wilting colour is driven inline by JS on fills */
+
+/* --------------------------- watering --------------------------- */
+.pouring { position: absolute; inset: 0; pointer-events: none; z-index: 40; overflow: hidden; }
+
+.drop {
+  position: absolute;
+  width: 10px;
+  height: 14px;
+  background: linear-gradient(180deg, var(--water-light), var(--water));
+  border-radius: 50% 50% 50% 50% / 62% 62% 42% 42%;
+  box-shadow: 0 0 8px rgba(120, 210, 255, 0.7);
+  animation: fall var(--fall, 0.8s) cubic-bezier(0.5, 0, 0.9, 0.4) forwards;
+}
+@keyframes fall {
+  0%   { opacity: 0; transform: translateY(-40px) scale(0.6); }
+  15%  { opacity: 1; }
+  85%  { opacity: 1; }
+  100% { opacity: 0; transform: translateY(var(--dist, 300px)) scale(0.5); }
+}
+
+.splash {
+  position: absolute;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--water-light);
+  animation: splash 0.55s ease-out forwards;
+}
+@keyframes splash {
+  0%   { opacity: 1; transform: translate(0, 0) scale(1); }
+  100% { opacity: 0; transform: translate(var(--sx), var(--sy)) scale(0.2); }
+}
+
+.ripple {
+  position: absolute;
+  border-radius: 50%;
+  border: 2px solid rgba(160, 225, 255, 0.85);
+  transform: translate(-50%, -50%) scale(0.2);
+  animation: rippleOut 0.9s ease-out forwards;
+}
+@keyframes rippleOut {
+  to { opacity: 0; transform: translate(-50%, -50%) scale(2.4); }
+}
+
+.gain {
+  position: absolute;
+  font-weight: 900;
+  font-size: 1rem;
+  color: #fff;
+  text-shadow: 0 2px 8px rgba(30, 120, 180, 0.8);
+  pointer-events: none;
+  animation: gainFloat 1.5s ease-out forwards;
+}
+@keyframes gainFloat {
+  0%   { opacity: 0; transform: translate(-50%, 0) scale(0.6); }
+  20%  { opacity: 1; transform: translate(-50%, -14px) scale(1.1); }
+  100% { opacity: 0; transform: translate(-50%, -80px) scale(1); }
+}
+
+/* sparkles when the plant grows */
+.spark {
+  position: absolute;
+  width: 8px; height: 8px;
+  pointer-events: none;
+  background: radial-gradient(circle, #fffbe0, #ffe27a 60%, transparent 70%);
+  border-radius: 50%;
+  animation: sparkle 1s ease-out forwards;
+}
+@keyframes sparkle {
+  0%   { opacity: 0; transform: translate(-50%, -50%) scale(0.2); }
+  40%  { opacity: 1; }
+  100% { opacity: 0; transform: translate(-50%, -140%) scale(1.2); }
+}
+
+/* seed landing puff */
+.puff {
+  position: absolute;
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(150, 110, 75, 0.55), transparent 70%);
+  animation: puffOut 0.9s ease-out forwards;
+  pointer-events: none;
+}
+@keyframes puffOut {
+  0%   { opacity: 0.9; transform: translate(-50%, -50%) scale(0.3); }
+  100% { opacity: 0; transform: translate(-50%, -50%) scale(2.6); }
+}
+
+/* --------------------------- short screens --------------------------- */
+@media (max-height: 700px) {
+  .speech { font-size: 0.82rem; }
+}
+@media (max-height: 600px) {
+  .companion-tag { display: none; }
+}

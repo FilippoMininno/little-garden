@@ -1,0 +1,206 @@
+/* ============================================================
+   Little Garden — garden.css
+   Background meadow, ground detail, insects, fireflies,
+   celebration and the transplant wisp.
+   ============================================================ */
+
+.garden {
+  position: absolute;
+  left: 0; right: 0;
+  bottom: 0;
+  height: 42%;
+  pointer-events: none;
+  z-index: 4;
+  overflow: visible;
+}
+
+.garden-plant {
+  position: absolute;
+  transform-origin: 50% 100%;
+}
+.garden-plant svg { display: block; width: 100%; height: 100%; overflow: visible; }
+.garden-plant .g-stem { fill: none; stroke-linecap: round; }
+
+/* The garden is still and calm — no continuous movement. */
+
+.garden-plant.fresh svg { animation: freshIn 1.5s cubic-bezier(0.34, 1.56, 0.64, 1); }
+@keyframes freshIn {
+  0%   { opacity: 0; transform: scale(0.28) translateY(20px); filter: brightness(2.2) drop-shadow(0 0 16px rgba(255, 226, 150, 0.95)); }
+  55%  { opacity: 1; }
+  100% { opacity: 1; transform: scale(1) translateY(0); filter: brightness(1) drop-shadow(0 0 0 rgba(255, 226, 150, 0)); }
+}
+
+/* --------------------------- fireflies --------------------------- */
+.fireflies { position: absolute; inset: 0; pointer-events: none; z-index: 6; }
+.firefly {
+  position: absolute;
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #fff7b0, #ffd84d 55%, transparent 72%);
+  box-shadow: 0 0 10px 3px rgba(255, 224, 100, 0.7);
+  opacity: 0;
+  transition: opacity 2s ease;
+  animation: fireflyFloat var(--dur, 9s) ease-in-out infinite;
+  animation-delay: var(--delay, 0s);
+}
+body.is-night .firefly { opacity: var(--ff-op, 0.9); }
+@keyframes fireflyFloat {
+  0%, 100% { transform: translate(0, 0); }
+  25%      { transform: translate(18px, -22px); }
+  50%      { transform: translate(-12px, -34px); }
+  75%      { transform: translate(-20px, -12px); }
+}
+
+/* --------------------------- insects --------------------------- */
+.insects { position: absolute; inset: 0; pointer-events: none; z-index: 7; overflow: hidden; }
+
+.butterfly, .bee {
+  position: absolute;
+  left: 0; top: 0;
+  width: 30px; height: 26px;
+  opacity: 0;
+  transition: opacity 1.2s ease;
+  will-change: transform;
+}
+.butterfly.active, .bee.active { opacity: 1; }
+
+.butterfly .wing, .bee .wing {
+  position: absolute;
+  top: 0;
+  width: 15px; height: 22px;
+  border-radius: 60% 60% 50% 50%;
+  transform-origin: 100% 60%;
+  animation: flapLeft 0.22s ease-in-out infinite alternate;
+}
+/* the right wing hinges on its left edge, so it must fold the other way
+   for both wings to beat together */
+.butterfly .wing.right, .bee .wing.right {
+  transform-origin: 0% 60%;
+  animation-name: flapRight;
+}
+.butterfly .wing.left  { left: 0;  background: radial-gradient(circle at 60% 40%, var(--bw1, #ff9ec4), var(--bw2, #ff6fa5)); }
+.butterfly .wing.right { right: 0; background: radial-gradient(circle at 40% 40%, var(--bw1, #ff9ec4), var(--bw2, #ff6fa5)); transform-origin: 0% 60%; }
+.butterfly .wing { box-shadow: inset 0 0 0 2px rgba(255,255,255,0.35); }
+.butterfly .body, .bee .body {
+  position: absolute;
+  left: 50%; top: 8px;
+  width: 4px; height: 15px;
+  background: #4a3a2f;
+  border-radius: 4px;
+  transform: translateX(-50%);
+}
+.bee .wing { background: rgba(220, 240, 255, 0.7); width: 12px; height: 14px; top: 2px; }
+.bee .wing.left { left: 2px; }
+.bee .wing.right { right: 2px; }
+.bee .body { background: linear-gradient(180deg, #ffd95e 0 30%, #3a2a1f 30% 45%, #ffd95e 45% 65%, #3a2a1f 65% 80%, #ffd95e 80%); }
+.bee .wing { animation-duration: 0.12s; }
+
+@keyframes flapLeft {
+  from { transform: rotateY(0deg) scaleX(1); }
+  to   { transform: rotateY(62deg) scaleX(0.55); }
+}
+@keyframes flapRight {
+  from { transform: rotateY(0deg) scaleX(1); }
+  to   { transform: rotateY(-62deg) scaleX(0.55); }
+}
+
+/* --------------------------- transplant wisp --------------------------- */
+.transplant-wisp {
+  position: absolute;
+  width: 54px; height: 54px;
+  pointer-events: none;
+  z-index: 65;
+  will-change: transform, opacity;
+  filter: drop-shadow(0 2px 4px rgba(120, 60, 20, 0.35));
+}
+.wisp-body {
+  position: absolute;
+  inset: 0;
+  animation: wispSpin 2.6s linear infinite;
+}
+@keyframes wispSpin { to { transform: rotate(360deg); } }
+.transplant-wisp i {
+  position: absolute;
+  left: 50%; top: 50%;
+  width: 14px; height: 19px;
+  margin: -9px 0 0 -7px;
+  border-radius: 55% 55% 48% 48% / 62% 62% 40% 40%;
+  background: linear-gradient(180deg, #ffffff, #ffcf4d 55%, #ff7fb0);
+  box-shadow: 0 0 10px rgba(255, 200, 90, 0.95), 0 0 2px rgba(150, 60, 10, 0.5);
+}
+.wisp-core {
+  position: absolute;
+  left: 50%; top: 50%;
+  width: 22px; height: 22px;
+  margin: -11px 0 0 -11px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 38%, #ffffff, #ffe27a 52%, #ff9ec4);
+  box-shadow: 0 0 22px 8px rgba(255, 214, 90, 0.9), 0 0 46px 18px rgba(255, 140, 190, 0.5), inset 0 0 0 2px rgba(255, 255, 255, 0.6);
+}
+.wisp-core::after {
+  content: "";
+  position: absolute;
+  inset: 28%;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 10px #fff;
+}
+
+/* the glowing arc the seed travels along */
+.transplant-trail-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 63;
+  overflow: visible;
+}
+
+/* landing ring burst */
+.transplant-ring {
+  position: absolute;
+  width: 22px; height: 22px;
+  margin: -11px 0 0 -11px;
+  border-radius: 50%;
+  border: 3px solid currentColor;
+  box-shadow: 0 0 18px rgba(255, 224, 140, 0.85), inset 0 0 12px rgba(255, 224, 140, 0.6);
+  pointer-events: none;
+  z-index: 63;
+  animation: ringBurst 0.95s ease-out forwards;
+}
+@keyframes ringBurst {
+  0%   { transform: scale(0.2); opacity: 0; }
+  28%  { opacity: 1; }
+  100% { transform: scale(3.4); opacity: 0; }
+}
+
+/* petal motes shed along the flight */
+.petal-mote {
+  position: absolute;
+  width: 7px; height: 9px;
+  border-radius: 62% 12% 62% 12%;
+  pointer-events: none;
+  z-index: 62;
+  animation: petalMote 1.5s ease-out forwards;
+}
+@keyframes petalMote {
+  0%   { opacity: 0; transform: translate(-50%, -50%) rotate(0deg); }
+  15%  { opacity: 0.95; }
+  100% { opacity: 0; transform: translate(calc(-50% + var(--sx)), calc(-50% + var(--sy))) rotate(240deg); }
+}
+
+/* --------------------------- celebration --------------------------- */
+.celebrate { position: absolute; inset: 0; pointer-events: none; z-index: 60; overflow: hidden; }
+.confetti {
+  position: absolute;
+  top: -6%;
+  width: 12px; height: 14px;
+  border-radius: 60% 10% 60% 10%;
+  animation: confettiFall var(--dur, 4s) linear forwards;
+  opacity: 0.95;
+}
+@keyframes confettiFall {
+  0%   { opacity: 0; transform: translateY(0) rotate(0deg); }
+  10%  { opacity: 1; }
+  100% { opacity: 0; transform: translateY(112vh) rotate(var(--spin, 540deg)); }
+}
