@@ -507,11 +507,9 @@ input[type="range"]::-moz-range-thumb {
   text-align: center;
   padding: 22px 22px 26px;
   border-radius: 30px;
-  background: var(--panel-strong);
+  background: #fffdf9;
   border: 1px solid var(--panel-border);
   box-shadow: var(--shadow-card);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
   animation: welcomeIn 0.7s cubic-bezier(0.22, 1, 0.36, 1);
 }
 @keyframes welcomeIn {

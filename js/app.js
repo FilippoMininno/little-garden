@@ -67,6 +67,7 @@
     plant: null,
     isNewDay: false,
     paused: false,
+    onboarding: false,
     faceOverride: null,
     lookDir: null,
     lookUntil: 0,
@@ -96,6 +97,7 @@
       Sky.update(new Date());
 
       if (!App.state.settings.onboarded) {
+        App.onboarding = true;
         App.openWelcome();
       } else if (App.isNewDay) {
         setTimeout(() => App.onNewDay(true), 600);
@@ -519,6 +521,7 @@
 
     /* --------------------------------------------------- reminders */
     secondTick() {
+      if (App.onboarding) return;   // keep the onboarding screen perfectly still
       const now = new Date();
       Sky.update(now);
       App.updateClock(now);
@@ -871,13 +874,8 @@
       el.appendChild(svgEl);
       const demo = new Plant(svgEl, 12345, { hue: 128, progress: 1, bloom: true, palette: Plant.PALETTES[0] });
       demo.snap();
-      let last = performance.now();
-      (function loop(ts) {
-        const dt = Math.min(0.05, (ts - last) / 1000);
-        last = ts;
-        demo.update(dt);
-        App._welcomeRaf = requestAnimationFrame(loop);
-      })(last);
+      // The preview is intentionally static: a per-frame animation inside the
+      // onboarding card made the whole card shimmer on some GPUs.
     },
 
     syncSettingsUI() {
@@ -899,6 +897,7 @@
       App.state.settings.onboarded = true;
       Store.save();
       d.welcome.hidden = true;
+      App.onboarding = false;
       if (App._welcomeRaf) { cancelAnimationFrame(App._welcomeRaf); App._welcomeRaf = 0; }
       App.setupPlant();
       App.updateAll();
@@ -914,7 +913,7 @@
       const tick = (ts) => {
         const dt = Math.min(0.06, (ts - last) / 1000) || 0.016;
         last = ts;
-        if (!App.paused) {
+        if (!App.paused && !App.onboarding) {
           if (App.plant) App.plant.update(dt);
           Effects.tick(dt, new Date(), App.state.garden.length, App.state.today.bloomed);
         }
