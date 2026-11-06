@@ -501,13 +501,17 @@ input[type="range"]::-moz-range-thumb {
 }
 .welcome[hidden] { display: none; }
 .welcome-card {
+  position: relative;
   width: min(94vw, 420px);
   max-height: 94vh;
   overflow-y: auto;
   text-align: center;
-  padding: 22px 22px 26px;
+  padding: 24px 22px 26px;
   border-radius: 30px;
-  background: #fffdf9;
+  background-color: #fffdf9;
+  background-repeat: no-repeat;
+  background-position: center bottom;
+  background-size: 90% auto;
   border: 1px solid var(--panel-border);
   box-shadow: var(--shadow-card);
   animation: welcomeIn 0.7s cubic-bezier(0.22, 1, 0.36, 1);
@@ -516,8 +520,8 @@ input[type="range"]::-moz-range-thumb {
   from { opacity: 0; transform: translateY(24px) scale(0.96); }
   to   { opacity: 1; transform: none; }
 }
-.welcome-art { height: 120px; display: grid; place-items: center; margin-bottom: 4px; }
-.welcome-art svg { height: 100%; width: auto; overflow: visible; }
+/* the plant lives in the card background now, so it can never cover the text */
+.welcome-art { display: none; }
 .welcome h1 { font-size: 1.5rem; font-weight: 900; margin: 0 0 10px; line-height: 1.15; }
 .welcome-text { font-size: 0.9rem; font-weight: 600; line-height: 1.5; color: var(--ink-soft); margin: 0 0 16px; }
 .welcome-goal {

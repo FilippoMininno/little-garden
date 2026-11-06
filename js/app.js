@@ -867,15 +867,22 @@
 
     buildWelcomeArt() {
       const el = App.dom.welcomeArt;
-      if (el.dataset.built) return;
+      const card = App.dom.welcome ? App.dom.welcome.querySelector('.welcome-card') : null;
+      if (!el || el.dataset.built) return;
       el.dataset.built = '1';
-      const svgEl = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      const NS = 'http://www.w3.org/2000/svg';
+      const svgEl = document.createElementNS(NS, 'svg');
       svgEl.setAttribute('viewBox', '0 0 220 300');
-      el.appendChild(svgEl);
+      svgEl.setAttribute('xmlns', NS);
+      svgEl.setAttribute('opacity', '0.16');
       const demo = new Plant(svgEl, 12345, { hue: 128, progress: 1, bloom: true, palette: Plant.PALETTES[0] });
       demo.snap();
-      // The preview is intentionally static: a per-frame animation inside the
-      // onboarding card made the whole card shimmer on some GPUs.
+      // use the plant as the card's *background* so it can never sit on top of the text
+      try {
+        const markup = new XMLSerializer().serializeToString(svgEl);
+        const uri = 'url("data:image/svg+xml;charset=utf-8,' + encodeURIComponent(markup) + '")';
+        if (card) card.style.backgroundImage = uri;
+      } catch (_) { /* background is optional */ }
     },
 
     syncSettingsUI() {
